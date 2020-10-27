@@ -7,6 +7,7 @@ from octoprint.util import RepeatedTimer
 from octoprint.events import eventManager, Events
 import octoprint.timelapse
 from flask import make_response
+import subprocess
 import time
 
 class AutomaticshutdownPlugin(octoprint.plugin.TemplatePlugin,
@@ -156,8 +157,7 @@ class AutomaticshutdownPlugin(octoprint.plugin.TemplatePlugin,
 		shutdown_command = self._settings.global_get(["server", "commands", "systemShutdownCommand"])
 		self._logger.info("Shutting down system with command: {command}".format(command=shutdown_command))
 		try:
-			import sarge
-			p = sarge.run(shutdown_command, async=True)
+			subprocess.call(['sh', '/home/pi/scripts/shutdown_printer.sh'])
 		except Exception as e:
 			self._logger.exception("Error when shutting down: {error}".format(error=e))
 			return
